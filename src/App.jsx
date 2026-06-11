@@ -15,6 +15,7 @@ function App() {
   const [jobDescription, setJobDescription] = useState("");
 const [matchScore, setMatchScore] = useState(0);
 const [matchedSkills, setMatchedSkills] = useState([]);
+const [aiFeedback, setAiFeedback] = useState("");
 
   const analyzeResume = async () => {
     if (!file) {
@@ -46,6 +47,25 @@ const [matchedSkills, setMatchedSkills] = useState([]);
         }
 
         setResumeText(extractedText);
+        try {
+  const response = await fetch(
+    "http://localhost:5000/analyze",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        resumeText: extractedText,
+      }),
+    }
+  );
+
+  const data = await response.json();
+  setAiFeedback(data.feedback);
+} catch (err) {
+  console.error(err);
+}
 
         const lowerText = extractedText.toLowerCase();
 
@@ -270,6 +290,17 @@ const [matchedSkills, setMatchedSkills] = useState([]);
             </div>
           </div>
         )}
+        {aiFeedback && (
+  <div className="mt-6 bg-indigo-50 p-4 rounded-lg border">
+    <h2 className="text-xl font-bold mb-3">
+      AI Resume Feedback
+    </h2>
+
+    <div className="whitespace-pre-wrap text-sm">
+      {aiFeedback}
+    </div>
+  </div>
+)}
 
         {resumeText && (
           <div className="mt-6 p-4 border rounded-lg bg-gray-50">
