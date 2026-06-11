@@ -1,3 +1,4 @@
+import ATSScore from "./components/ATSScore";
 import { useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
@@ -81,6 +82,27 @@ const [matchedSkills, setMatchedSkills] = useState([]);
 
         let score = Math.min(foundSkills.length * 10, 100);
         setAtsScore(score);
+        if (jobDescription.trim()) {
+  const jdText = jobDescription.toLowerCase();
+
+  const matched = skillsList.filter(
+    (skill) =>
+      lowerText.includes(skill) &&
+      jdText.includes(skill)
+  );
+
+  const jdSkills = skillsList.filter((skill) =>
+    jdText.includes(skill)
+  );
+
+  const matchPercentage =
+    jdSkills.length > 0
+      ? Math.round((matched.length / jdSkills.length) * 100)
+      : 0;
+
+  setMatchedSkills(matched);
+  setMatchScore(matchPercentage);
+}
         if (score >= 80) {
   setStrength("Strong 💪");
 } else if (score >= 60) {
@@ -154,38 +176,62 @@ const [matchedSkills, setMatchedSkills] = useState([]);
         )}
 
         {atsScore > 0 && (
-          <div className="mt-6 bg-green-100 border border-green-300 p-4 rounded-lg">
-            <h2 className="text-xl font-bold">
-              ATS Score: {atsScore}/100
-              {strength && (
-  <div className="mt-6 bg-yellow-50 border border-yellow-300 p-4 rounded-lg">
-    <h2 className="text-xl font-bold mb-3">
-      Resume Strength: {strength}
-    </h2>
-
-    <h3 className="font-semibold mb-2">
-      Improvement Suggestions:
-    </h3>
-
-    <ul className="list-disc ml-6">
-      {missingSkills.slice(0, 5).map((skill, index) => (
-        <li key={index}>
-          Consider learning {skill}
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
-            </h2>
-
+          <>
+            <ATSScore atsScore={atsScore} />
             <div className="w-full bg-gray-300 rounded-full h-4 mt-3">
               <div
                 className="bg-green-600 h-4 rounded-full"
                 style={{ width: `${atsScore}%` }}
               ></div>
             </div>
+          </>
+        )}
+
+        {strength && (
+          <div className="mt-6 bg-yellow-50 border border-yellow-300 p-4 rounded-lg">
+            <h2 className="text-xl font-bold mb-3">
+              Resume Strength: {strength}
+            </h2>
+
+            <h3 className="font-semibold mb-2">
+              Improvement Suggestions:
+            </h3>
+
+            <ul className="list-disc ml-6">
+              {missingSkills.slice(0, 5).map((skill, index) => (
+                <li key={index}>
+                  Consider learning {skill}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
+        {matchScore > 0 && (
+  <div className="mt-6 bg-purple-100 p-4 rounded-lg">
+    <h2 className="text-xl font-bold">
+      JD Match Score: {matchScore}%
+    </h2>
+  </div>
+)}
+
+{matchedSkills.length > 0 && (
+  <div className="mt-6 bg-green-50 p-4 rounded-lg">
+    <h2 className="text-xl font-bold mb-3">
+      Matched Skills
+    </h2>
+
+    <div className="flex flex-wrap gap-2">
+      {matchedSkills.map((skill, index) => (
+        <span
+          key={index}
+          className="bg-green-500 text-white px-3 py-1 rounded-full"
+        >
+          {skill}
+        </span>
+      ))}
+    </div>
+  </div>
+)}
 
         {detectedSkills.length > 0 && (
           <div className="mt-6 bg-blue-50 p-4 rounded-lg">
