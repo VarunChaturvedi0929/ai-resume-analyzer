@@ -11,6 +11,9 @@ function App() {
   const [detectedSkills, setDetectedSkills] = useState([]);
   const [missingSkills, setMissingSkills] = useState([]);
   const [strength, setStrength] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
+const [matchScore, setMatchScore] = useState(0);
+const [matchedSkills, setMatchedSkills] = useState([]);
 
   const analyzeResume = async () => {
     if (!file) {
@@ -117,6 +120,19 @@ function App() {
             setMissingSkills([]);
           }}
         />
+        <div className="mt-6">
+  <label className="font-semibold">
+    Paste Job Description
+  </label>
+
+  <textarea
+    rows="6"
+    value={jobDescription}
+    onChange={(e) => setJobDescription(e.target.value)}
+    className="w-full border p-3 rounded-lg mt-2"
+    placeholder="Paste Job Description here..."
+  />
+</div>
 
         {file && (
           <div className="mt-6 bg-gray-50 p-4 rounded-lg">
