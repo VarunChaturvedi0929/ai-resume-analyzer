@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
-console.log("API KEY:", process.env.GEMINI_API_KEY);
+console.log("API Key Exists:", !!process.env.GEMINI_API_KEY);
 
 const app = express();
 
@@ -20,7 +20,7 @@ app.post("/analyze", async (req, res) => {
     const { resumeText } = req.body;
 
     const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: "gemini-2.5-flash",
 });
 
     const prompt = `
