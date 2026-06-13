@@ -1,3 +1,4 @@
+import mammoth from "mammoth";
 import ATSScore from "./components/ATSScore";
 import { useState } from "react";
 import * as pdfjsLib from "pdfjs-dist";
@@ -16,14 +17,27 @@ function App() {
 const [matchScore, setMatchScore] = useState(0);
 const [matchedSkills, setMatchedSkills] = useState([]);
 const [aiFeedback, setAiFeedback] = useState("");
-
   const analyzeResume = async () => {
-    if (!file) {
-      alert("Please upload a resume first");
-      return;
-    }
-
     try {
+    /*if (
+  file.name.endsWith(".docx") ||
+  file.name.endsWith(".doc")
+) {
+  const arrayBuffer = await file.arrayBuffer();
+
+  const result = await mammoth.extractRawText({
+    arrayBuffer,
+  });
+
+  const extractedText = result.value;
+
+  setResumeText(extractedText);
+
+  const lowerText = extractedText.toLowerCase();
+
+  // yahan niche wala skills detection code chalega
+  return;
+}*/ 
       const fileReader = new FileReader();
 
       fileReader.onload = async (event) => {
@@ -151,17 +165,17 @@ const [aiFeedback, setAiFeedback] = useState("");
         </p>
 
         <input
-          type="file"
-          accept=".pdf"
-          className="w-full border p-3 rounded-lg"
-          onChange={(e) => {
-            setFile(e.target.files[0]);
-            setResumeText("");
-            setAtsScore(0);
-            setDetectedSkills([]);
-            setMissingSkills([]);
-          }}
-        />
+  type="file"
+  accept=".pdf,.doc,.docx"
+  className="w-full border p-3 rounded-lg"
+  onChange={(e) => {
+    setFile(e.target.files[0]);
+    setResumeText("");
+    setAtsScore(0);
+    setDetectedSkills([]);
+    setMissingSkills([]);
+  }}
+/>
         <div className="mt-6">
   <label className="font-semibold">
     Paste Job Description
